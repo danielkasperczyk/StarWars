@@ -4,7 +4,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import FormComponent from './Components/FormComponent';
 import Heroes from './Components/Heroes';
 import Hero from './Components/Hero';
-
+import Navbar from './Components/Navbar';
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
@@ -27,24 +27,27 @@ const GlobalStyle = createGlobalStyle`
 const Container = styled.div`
   width: 80vw;
   margin: 0 auto;
-`
+  overflow-y: scroll;
+  max-width: 1000px;
+  ::-webkit-scrollbar {
+    display: block;
+}`
 
 function App() {
   return (
-    <Container>
+    <Router>
       <GlobalStyle />
-      <Router>
-        <Switch>
-          <Route path='/' exact>
-            <FormComponent />
-            <Heroes />
-          </Route>
-          <Route path='/hero'>
-            <Hero />
-          </Route>
-        </Switch>
-      </Router>
-    </Container>
+      <Navbar />
+      <Container>
+          <Switch>
+            <Route path='/' exact>
+              <FormComponent />
+              <Heroes />
+            </Route>
+            <Route path='/hero' component={Hero}/>
+          </Switch>
+      </Container>
+    </Router>
   );
 }
 

@@ -3,12 +3,7 @@ import ReactDOM from 'react-dom';
 
 import App from './App';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux'; 
-import setCharacters from './app/CharactersRedux';
-
-const store = createStore(
-  setCharacters
-);
+import store from './app/store';
 
 ReactDOM.render(
   <React.StrictMode>

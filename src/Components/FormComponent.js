@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setHeroes, addHeroes } from '../features/heroes/heroesSlice';
+
 
 const Flex = styled.div`
     display: flex;
@@ -19,14 +23,31 @@ const FormMod = styled(Form.Group)`
 
 
 const FormComponent = () => {
+    const [text, setText] = useState('');
+    const dispatch = useDispatch(); 
+    const BASE = 'https://swapi.dev/api/people/?search='
+    const submitHandler = async e => {
+        e.preventDefault();
+        const res = await axios.get(`${BASE}${text}`);
+        const results = await res.data.results
+        const data = results.length !== 0 ?  results : 'No Characters Found';
+        console.log(data);
+
+        setText('');
+        dispatch(addHeroes(data));
+    }
+
     return( 
-        <Form>
-            <h4>Star Wars Searcher</h4>
+        <Form onSubmit={submitHandler}>
             <Flex>
                 <FormMod>
-                    <Form.Control type="text" placeholder="Find Star Wars Hero" />
+                    <Form.Control 
+                        type="text" 
+                        placeholder="Find Star Wars Hero" 
+                        value={text}
+                        onChange={e=> setText(e.target.value)}/>
                 </FormMod>
-                <ButtonMod variant="primary" type="submit">Search</ButtonMod>
+                <ButtonMod variant="dark" type="button">Search</ButtonMod>
             </Flex>
         </Form>
     )
