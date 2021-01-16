@@ -33,12 +33,12 @@ const FormComponent = () => {
     const [text, setText] = useState('');
     const dispatch = useDispatch(); 
     const BASE = 'https://swapi.dev/api/people/?search='
+
     const submitHandler = async e => {
         e.preventDefault();
         const res = await axios.get(`${BASE}${text}`);
         const results = await res.data.results
         const data = results.length !== 0 ?  results : 'No Characters Found';
-        console.log(data);
 
         setText('');
         dispatch(addHeroes(data));
@@ -54,7 +54,7 @@ const FormComponent = () => {
                         value={text}
                         onChange={e=> setText(e.target.value)}/>
                 </FormMod>
-                <ButtonMod variant="dark" type="button">Search</ButtonMod>
+                <ButtonMod variant="dark" type="submit">Search</ButtonMod>
             </Flex>
         </Form>
     )

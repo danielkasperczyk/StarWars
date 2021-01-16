@@ -1,4 +1,5 @@
-import { ListGroup } from 'react-bootstrap';
+import React, { useState } from 'react'
+import { ListGroup, Form, FormGroup } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -27,17 +28,64 @@ const Text = styled.div`
     text-align: center;
 `
 
+const Container = styled.div`
+    width: 100%;
+    display: flex;
+    align-items:  center;
+    justify-content: space-between;
+    p { margin: 0;}
+`
+
+const FormSelect = styled(Form.Group)`
+    margin: 0;
+    padding: 0.2rem;
+    outline:  #343a40;
+`
+
+
 const heroesState = state => state.hero.heroes
 
 const Heroes = props => {
     const heroes = useSelector(heroesState);
-    console.log(heroes)
+    const [selected, setSelected] = useState('All');
+    const [results, countResults] = useState(0);
+
+    const filterByGender = hero => {
+        const { gender } = hero
+
+        if(selected.toUpperCase() === "ALL") {
+            return hero
+        } 
+        else if(selected.toUpperCase() === "UNKNOWN"){
+            const check = gender === 'n/a' ? true : false;
+            return check === true && hero;
+        }
+        else {
+            const check = gender.toUpperCase() === selected.toUpperCase() ? true : false;
+            return check === true && hero;
+        }
+    }
+    console.log(heroes);
+    const filteredArray = Array.isArray(heroes)  ? heroes.filter(hero => filterByGender(hero)) : null;
+
     return (
         <> 
-            { Array.isArray(heroes) ?
+            { (Array.isArray(heroes) && heroes.length > 0) ?
             <>
-            {heroes.length > 0 && `Results: ${heroes.length}`}
-            {heroes.map(hero=> 
+            <Container>
+                <p>{filteredArray.length !== 0 && `Results: ${filteredArray.length}`}</p>
+                <FormSelect 
+                    as="select" 
+                    onChange={e => setSelected(e.target.value)}
+                    value={selected}>
+                    <option>All</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Unknown</option>
+                </FormSelect>
+            </Container>
+            
+            {filteredArray.map(hero=> 
             <ModLink to={{
                 pathname: "/hero",
                 state: {
@@ -47,7 +95,7 @@ const Heroes = props => {
                 <ListGroup>
                     <ListItem>{hero.name}</ListItem>
                 </ListGroup>
-            </ModLink>   )} 
+            </ModLink>)} 
             </> : <Text><h5>{heroes}</h5></Text>}
         </>
     )

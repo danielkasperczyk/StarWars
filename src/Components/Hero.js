@@ -17,7 +17,6 @@ const  Hero =  props => {
         }
 
         getPlanetName();
-        console.log(planetName);
     }, [])
 
     function backToHome() {
