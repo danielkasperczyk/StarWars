@@ -6,11 +6,18 @@ import { useDispatch } from 'react-redux';
 import { setHeroes, addHeroes } from '../features/heroes/heroesSlice';
 
 
+const FormInput = styled(Form.Control)`
+    &:focus{
+        -webkit-box-shadow: 0px 0px 5px 1px #FFE81F; 
+        box-shadow: 0px 0px 5px 1px #FFE81F;
+    }
+`
+
 const Flex = styled.div`
     display: flex;
     align-items: flex-end;
     height: fit-content;
-    margin: 1rem 0;
+    margin: 1rem 0.2rem;
 `
 const ButtonMod = styled(Button)`
     margin-left: 1rem;
@@ -41,7 +48,7 @@ const FormComponent = () => {
         <Form onSubmit={submitHandler}>
             <Flex>
                 <FormMod>
-                    <Form.Control 
+                    <FormInput
                         type="text" 
                         placeholder="Find Star Wars Hero" 
                         value={text}
