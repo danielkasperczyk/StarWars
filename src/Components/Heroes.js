@@ -15,8 +15,11 @@ const ModLink = styled(Link)`
 `
 const ListItem = styled(ListGroup.Item)`
     font-size: 1rem;
-    margin: 0.5rem 0;
+    margin: 0.5rem auto;
+    background-color: #d1d1d1;
     transition: background-color 250ms;
+    width: 50vw;
+    max-width: 400px;
     &:hover {
         background-color: #343a40
     }
@@ -40,6 +43,8 @@ const FormSelect = styled(Form.Group)`
     margin: 0;
     padding: 0.2rem;
     outline:  #343a40;
+    background-color: #d1d1d1;
+    border: 1px solid #d1d1d1;
 `
 
 
@@ -48,7 +53,6 @@ const heroesState = state => state.hero.heroes
 const Heroes = props => {
     const heroes = useSelector(heroesState);
     const [selected, setSelected] = useState('All');
-    const [results, countResults] = useState(0);
 
     const filterByGender = hero => {
         const { gender } = hero
@@ -65,7 +69,6 @@ const Heroes = props => {
             return check === true && hero;
         }
     }
-    console.log(heroes);
     const filteredArray = Array.isArray(heroes)  ? heroes.filter(hero => filterByGender(hero)) : null;
 
     return (
@@ -73,7 +76,7 @@ const Heroes = props => {
             { (Array.isArray(heroes) && heroes.length > 0) ?
             <>
             <Container>
-                <p>{filteredArray.length !== 0 && `Results: ${filteredArray.length}`}</p>
+                <p>{`Results: ${filteredArray.length}`}</p>
                 <FormSelect 
                     as="select" 
                     onChange={e => setSelected(e.target.value)}
@@ -85,14 +88,14 @@ const Heroes = props => {
                 </FormSelect>
             </Container>
             
-            {filteredArray.map(hero=> 
+            {filteredArray.map((hero, index) => 
             <ModLink to={{
-                pathname: "/hero",
+                pathname: `/hero`,
                 state: {
                     hero
                 }
             }}>
-                <ListGroup>
+                <ListGroup key={index}>
                     <ListItem>{hero.name}</ListItem>
                 </ListGroup>
             </ModLink>)} 

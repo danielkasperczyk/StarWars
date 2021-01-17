@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setHeroes, addHeroes } from '../features/heroes/heroesSlice';
-
+import { fetchData } from '../features/helpers';
 
 const FormInput = styled(Form.Control)`
+    background-color: #d1d1d1;
+    ::placeholder{
+        color: #3b3b3b;
+    }
     &:focus{
         -webkit-box-shadow: 0px 0px 5px 1px #FFE81F; 
         box-shadow: 0px 0px 5px 1px #FFE81F;
+        background-color: #d1d1d1;
     }
 `
 
@@ -32,15 +36,11 @@ const FormMod = styled(Form.Group)`
 const FormComponent = () => {
     const [text, setText] = useState('');
     const dispatch = useDispatch(); 
-    const BASE = 'https://swapi.dev/api/people/?search='
 
     const submitHandler = async e => {
         e.preventDefault();
         if(text.length > 0 ) {
-            const res = await axios.get(`${BASE}${text}`);
-            const results = await res.data.results
-            const data = results.length !== 0 ?  results : 'No Characters Found';
-    
+            const data = await fetchData(text)
             setText('');
             dispatch(addHeroes(data));
         }
