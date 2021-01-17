@@ -5,12 +5,15 @@ import FormComponent from './Components/FormComponent';
 import Heroes from './Components/Heroes';
 import Hero from './Components/Hero';
 import Navbar from './Components/Navbar';
+import NotFound from './Components/NotFound';
+
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
     font-size: 62.5%;
+    background-color: #f0f0f0;
   }
 
   ::placeholder{
@@ -45,6 +48,7 @@ function App() {
               <Heroes />
             </Route>
             <Route path='/hero' component={Hero}/>
+            <Route component={NotFound} />
           </Switch>
       </Container>
     </Router>
