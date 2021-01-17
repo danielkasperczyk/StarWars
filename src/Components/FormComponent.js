@@ -36,12 +36,14 @@ const FormComponent = () => {
 
     const submitHandler = async e => {
         e.preventDefault();
-        const res = await axios.get(`${BASE}${text}`);
-        const results = await res.data.results
-        const data = results.length !== 0 ?  results : 'No Characters Found';
-
-        setText('');
-        dispatch(addHeroes(data));
+        if(text.length > 0 ) {
+            const res = await axios.get(`${BASE}${text}`);
+            const results = await res.data.results
+            const data = results.length !== 0 ?  results : 'No Characters Found';
+    
+            setText('');
+            dispatch(addHeroes(data));
+        }
     }
 
     return( 
