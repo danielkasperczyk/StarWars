@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { ListGroup, Button, ListGroupItem } from 'react-bootstrap';
+import { useHistory, useLocation } from 'react-router-dom';
+import { ListGroup, Button } from 'react-bootstrap';
 import axios from 'axios';
 import styled from 'styled-components';
 import Loader from './Loader';
-import { transformToUppercase } from '../features/helpers';
+import { transformToUppercase, fetchData, returnObj } from '../features/helpers';
 
 const Flex = styled.div`
     width: 100%;
@@ -40,64 +40,86 @@ const Item = styled(ListGroup.Item)`
 
 const  Hero =  props => {
     let hisotry = useHistory();
-    const {name, height, mass, skin_color, hair_color, gender, homeworld } = props.location.state.hero
+    let location = useLocation();
+    // const {name, height, mass, skin_color, hair_color, gender, homeworld } = props.location.state.hero
     const [planetName, setPlanetName ] = useState('')
     const [loader, hideLoader] = useState(true);
+    const [hero, setHero] = useState();
     
-    useEffect(async () => {
-        async function getPlanetName(){
-            const planet = await axios.get(homeworld)
-            setPlanetName(planet.data.name);
+    useEffect(() => {
+        if(!hero){
+            async function getHeroData(){
+                const { pathname } = location;
+                const loc = pathname.slice(pathname.indexOf('hero/')).replace('hero/', '').replace(/-/g, ' ');
+                
+                const data = await fetchData(loc);
+                const temp =  (typeof data === "object") ? returnObj(data[0]) : data;
+                setHero(temp);
+            }
+            getHeroData();
+            hideLoader(false);
         }
-        await getPlanetName();
-        hideLoader(false);
-    }, [])
+    }, [hero])
+    
 
     function backToHome() {
         hisotry.push('/')
     }
-    console.log(height, mass);
+
+    async function getPlanetName(){
+        if(hero){
+            const href = hero[6].slice(0, 4) + "s";
+            const newHref = href.concat(hero[6].slice(4));
+            const planet = await axios.get(newHref)
+            planet && setPlanetName(planet.data.name);   
+        }
+       
+    }
+    getPlanetName();
     return(
         <div>
             {loader && <Loader />}
-            { planetName !== '' && 
-            <>
+            { ((typeof hero !== "string") && hero !== undefined)? 
                 <Flex>
-                    <h1>{name}</h1>
-                <ListGroup>
-                    <Item>
-                        <p>Height</p>
-                        {(height !==  'n/a' && height !==  'unknown')? <p>{transformToUppercase(height)} cm</p> : <p>Unknown</p> }
-                    </Item>
-                    <Item>
-                        <p>Mass</p>
-                        {(mass !==  'n/a' && mass !== 'unknown') ? <p>{transformToUppercase(mass)} kg</p> : <p>Unknown</p> }
-                    </Item>
-                    <Item>
-                      <p>Skin color</p> 
-                      {skin_color !==  'n/a' ? <p>{transformToUppercase(skin_color)}</p> : <p>Unknown</p> } 
-                    </Item>
-                    <Item>
-                        <p>Hair color</p>
-                        {hair_color !==  'n/a' ? <p>{transformToUppercase(hair_color)}</p> : <p>Unknown</p> }
-                    </Item>
-                    <Item>
-                        <p>Gender</p>
-                        {gender !==  'n/a' ? <p>{transformToUppercase(gender)}</p> : <p>Unknown</p> }
-                    </Item>
-                    <Item>
-                        <p>Planet</p>
-                        {planetName !==  'n/a' ? <p>{transformToUppercase(planetName)}</p> : <p>Unknown</p> }
-                    </Item>
-                </ListGroup>
+                    <h1>{hero[0]}</h1>
+                    <ListGroup>
+                        <Item>
+                            <p>Height</p>
+                            {(hero[1] !==  'n/a' && hero[1] !==  'unknown')? <p>{transformToUppercase(hero[1])} cm</p> : <p>Unknown</p> }
+                        </Item>
+                        <Item>
+                            <p>Mass</p>
+                            {(hero[2] !==  'n/a' && hero[2] !== 'unknown') ? <p>{transformToUppercase(hero[2])} kg</p> : <p>Unknown</p> }
+                        </Item>
+                        <Item>
+                        <p>Skin color</p> 
+                        {hero[3] !==  'n/a' ? <p>{transformToUppercase(hero[3])}</p> : <p>Unknown</p> } 
+                        </Item>
+                        <Item>
+                            <p>Hair color</p>
+                            {hero[4] !==  'n/a' ? <p>{transformToUppercase(hero[4])}</p> : <p>Unknown</p> }
+                        </Item>
+                        <Item>
+                            <p>Gender</p>
+                            {hero[5] !==  'n/a' ? <p>{transformToUppercase(hero[5])}</p> : <p>Unknown</p> }
+                        </Item>
+                        <Item>
+                            <p>Planet</p>
+                            {planetName !==  'n/a' ? <p>{transformToUppercase(planetName)}</p> : <p>Unknown</p> }
+                        </Item>
+                    </ListGroup>
+                </Flex >
+            : <Flex>
+                <h3>{hero}</h3>    
+            </Flex>}
+            <Flex>
                 <Button     
                     type="button"
                     variant="link"
                     onClick={backToHome}>
                         Home Page
                 </Button>
-                </Flex>
-            </>}
+            </Flex>
         </div>
     )
 }

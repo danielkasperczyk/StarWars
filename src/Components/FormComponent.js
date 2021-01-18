@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { setHeroes, addHeroes } from '../features/heroes/heroesSlice';
+import { addHeroes } from '../features/heroes/heroesSlice';
 import { fetchData } from '../features/helpers';
 
 const FormInput = styled(Form.Control)`

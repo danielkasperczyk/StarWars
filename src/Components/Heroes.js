@@ -79,7 +79,6 @@ const Heroes = props => {
         }
     }
     const filteredArray = Array.isArray(heroes)  ? heroes.filter(hero => filterByGender(hero)) : null;
-
     return (
         <> 
             { (Array.isArray(heroes) && heroes.length > 0) ?
@@ -100,7 +99,7 @@ const Heroes = props => {
             {filteredArray.map((hero, index) => 
                 <List key={index}>
                     <ModLink to={{
-                        pathname: `/hero`,
+                        pathname: `/hero/${hero.name.replace(" ", "-").toLowerCase()}`,
                         state: {
                             hero
                         }
