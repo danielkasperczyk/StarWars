@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
-import { ListGroup, Form, FormGroup } from 'react-bootstrap';
+import { ListGroup, Form } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+const List = styled(ListGroup)`
+    margin: 0.5rem 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+`
+
 const ModLink = styled(Link)`
+    width: fit-content;
     color: #343a40;
     text-decoration: none;
     transition: color 250ms;
@@ -13,13 +21,14 @@ const ModLink = styled(Link)`
         text-decoration: none;
     }
 `
+
 const ListItem = styled(ListGroup.Item)`
     font-size: 1rem;
-    margin: 0.5rem auto;
     background-color: #d1d1d1;
     transition: background-color 250ms;
     width: 50vw;
     max-width: 400px;
+    text-align: center;
     &:hover {
         background-color: #343a40
     }
@@ -89,16 +98,16 @@ const Heroes = props => {
             </Container>
             
             {filteredArray.map((hero, index) => 
-            <ModLink to={{
-                pathname: `/hero`,
-                state: {
-                    hero
-                }
-            }}>
-                <ListGroup key={index}>
-                    <ListItem>{hero.name}</ListItem>
-                </ListGroup>
-            </ModLink>)} 
+                <List key={index}>
+                    <ModLink to={{
+                        pathname: `/hero`,
+                        state: {
+                            hero
+                        }
+                    }}>
+                        <ListItem>{hero.name}</ListItem>
+                    </ModLink>
+                </List>)} 
             </> : <Text><h5>{heroes}</h5></Text>}
         </>
     )

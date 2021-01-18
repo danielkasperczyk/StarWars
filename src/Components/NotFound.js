@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 
 const Flex = styled.div`
+    margin-top: 2rem;
     width: 100%;
     display: flex;
     flex-direction: column;
