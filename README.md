@@ -18,4 +18,5 @@ User can search for characters from Star Wars movies. After searching, a charact
 
 ### Contact
 Project Github: https://github.com/danielkasperczyk/StarWars
+
 Project Live:  https://trusting-knuth-aab6c4.netlify.app/
